@@ -3,6 +3,7 @@ destroy bricks with a paddle and ball
 
 
 whats important:
+
     1
         paddle for user follows mouse x
         ball moves and bounces off bricks and sides
