@@ -2,12 +2,11 @@
 
 <html lang="en">
     <head>
-       <script type="text/javascript" src="phaser.js">
-            
-           
-           
-       </script>
+        
+       <script type="text/javascript" src="phaser.js"></script>
+       
        <script type="text/javascript" src="main.js"></script>
+      
        <style>
            #game-canvas {
                border: 1px solid black;
@@ -26,15 +25,20 @@
                cursor: pointer;
            }
        </style>
+       
        <title>The Brick Game</title>
        
     </head>
     
     <body>
-       <canvas id="game-canvas" width="800" height="600" onload="draw();">
+        <canvas id="game-canvas" width="800" height="600" onload="draw();">
+           
+           <!-- note: the canvas will not display html elements -->
            <p>Player 1: Sam</p>
-            </canvas>
-       <script type="text/javascript" src="main.js"></script>
+        </canvas>
+        
+           <!-- note: html elements outside of the canvas will display as expected by default -->
+           <p>Player 1: Sam (test)</p>
     </body>
     
     
