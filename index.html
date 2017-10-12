@@ -9,32 +9,77 @@
        </script>
        <script type="text/javascript" src="main.js"></script>
        <style>
-           #game-canvas {
+           #myCanvas {
                border: 1px solid black;
+               position: absolute;
+               left: 50%;
+               top: 50%;
+               margin-left: -400px;
+               margin-top: -200px;
            }
-           p {
-               font-family: fantasy, times new roman;
-               font-size: 20px;
-               color: red;
-               border: 2px solid red;
-               background-color: black;
-               text-align: center;
-               box-shadow: 1px 1px 2px rgba(240, 0, 0, .4);
-               border-radius: 10px;
-               padding: 3px 10px;
-               display: inline-block;
-               cursor: pointer;
-           }
+           
        </style>
        <title>The Brick Game</title>
        
     </head>
     
     <body>
-       <canvas id="game-canvas" width="800" height="600" onload="draw();">
-           <p>Player 1: Sam</p>
-            </canvas>
+       <canvas id="myCanvas" width="800" height="400" onload="draw();"></canvas>
        <script type="text/javascript" src="main.js"></script>
+       <script>
+           
+            var canvas = document.getElementById('myCanvas');
+            var context = canvas.getContext('2d');
+        
+            //draw paddle
+            
+            function getMouseX(canvas, evt) {
+                var rect = canvas.getBoundingClientRect();
+                return evt.clientX - rect.left;
+            }
+            
+            var Paddle = function(x) {
+                this.x = x;
+                
+            };
+            
+            Paddle.prototype.draw = function() {
+                var context = canvas.getContext('2d');
+                context.clearRect(0, 0, canvas.width, canvas.height);
+                context.fillStyle = "green";
+                context.fillRect(this.x, 350, 50, 10);
+                
+            };
+            
+            canvas.addEventListener("")
+           /* how to get mouse x and y ---
+           
+           function writeMessage(canvas, message) {
+        var context = canvas.getContext('2d');
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        context.font = '18pt Calibri';
+        context.fillStyle = 'black';
+        context.fillText(message, 10, 25);
+      }
+      function getMousePos(canvas, evt) {
+        var rect = canvas.getBoundingClientRect();
+        return {
+          x: evt.clientX - rect.left,
+          y: evt.clientY - rect.top
+        };
+      }
+      var canvas = document.getElementById('myCanvas');
+      var context = canvas.getContext('2d');
+
+      canvas.addEventListener('mousemove', function(evt) {
+        var mousePos = getMousePos(canvas, evt);
+        var message = 'Mouse position: ' + mousePos.x + ',' + mousePos.y;
+        writeMessage(canvas, message);
+      }, false);
+
+---
+*/
+       </script>
     </body>
     
     
