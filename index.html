@@ -2,7 +2,6 @@
 
 <html lang="en">
     <head>
-       <script type="text/javascript" src="phaser.js">
             
            
            
@@ -18,6 +17,10 @@
                margin-top: -200px;
            }
            
+           /*hide cursor while over canvas*/
+           #myCanvas:hover {
+               cursor: none;
+           }
        </style>
        <title>The Brick Game</title>
        
@@ -30,28 +33,41 @@
            
             var canvas = document.getElementById('myCanvas');
             var context = canvas.getContext('2d');
-        
+            var mouseX;
+            
+            
+            
             //draw paddle
             
-            function getMouseX(canvas, evt) {
-                var rect = canvas.getBoundingClientRect();
-                return evt.clientX - rect.left;
-            }
-            
-            var Paddle = function(x) {
-                this.x = x;
+                function getMouseX(canvas, evt) {
+                    var rect = canvas.getBoundingClientRect();
+                    return evt.clientX - rect.left;
+                }
                 
-            };
-            
-            Paddle.prototype.draw = function() {
-                var context = canvas.getContext('2d');
-                context.clearRect(0, 0, canvas.width, canvas.height);
-                context.fillStyle = "green";
-                context.fillRect(this.x, 350, 50, 10);
+                var Paddle = function(x) {
+                    this.x = x;
+                    
+                };
                 
-            };
-            
-            canvas.addEventListener("")
+                Paddle.prototype.draw = function() {
+                    var context = canvas.getContext('2d');
+                    context.clearRect(0, 350, canvas.width, canvas.height);
+                    context.fillStyle = "green";
+                    context.fillRect(this.x - 25, 350, 50, 10);
+                    
+                };
+                
+                canvas.addEventListener("mousemove", function(evt){
+                    var mouseX = getMouseX(canvas, evt);
+                    //constrain to canvas
+                    if (mouseX < 25){
+                        mouseX = 25;
+                    } else if(mouseX > canvas.width - 25) {
+                        mouseX = canvas.width - 25;
+                    }
+                    var paddle = new Paddle(mouseX);
+                    paddle.draw();
+                });
            /* how to get mouse x and y ---
            
            function writeMessage(canvas, message) {
