@@ -1,5 +1,10 @@
 <!DOCTYPE html>
 
+<!--The only way I can see to make this work is to use setInterval.
+    Hopefully that will work with this, and I am basically going to 
+    run a function that runs the entirety of the code when setInterval
+    runs.
+-->
 <html lang="en">
     <head>
             
@@ -33,15 +38,18 @@
            
             var canvas = document.getElementById('myCanvas');
             var context = canvas.getContext('2d');
-            var mouseX;
             
             
             
             //draw paddle
             
-                function getMouseX(canvas, evt) {
+                function getMousePos(event) {
+                    console.log(event);
                     var rect = canvas.getBoundingClientRect();
-                    return evt.clientX - rect.left;
+                    return {
+                      x: event.clientX - rect.left,
+                      y: event.clientY - rect.top
+                    };
                 }
                 
                 var Paddle = function(x, width) {
@@ -49,106 +57,40 @@
                     this.width = width;
                 };
                 
-                var paddle = new Paddle();
+                Paddle.prototype.draw = function(event) {
+                    console.log(event);
+                    var mouseX = getMousePos(event);
+                    this.x = mouseX.x;
                 
-                Paddle.prototype.draw = function() {
-                    var context = canvas.getContext('2d');
-                    context.clearRect(0, 350, canvas.width, canvas.height);
+                    if (this.x < 25){
+                        this.x = 25;
+                    } else if(this.x > canvas.width - 25) {
+                        this.x = canvas.width - 25;
+                    }
+                    
                     context.fillStyle = "green";
                     context.fillRect(this.x - 25, 350, this.width, 10);
                     
                 };
                 
-                canvas.addEventListener("mousemove", function(evt){
-                    var mouseX = getMouseX(canvas, evt);
-                    //constrain to canvas
-                    if (mouseX < 25){
-                        mouseX = 25;
-                    } else if(mouseX > canvas.width - 25) {
-                        mouseX = canvas.width - 25;
-                    }
-                    var paddle = new Paddle(mouseX, 50);
-                    paddle.draw();
-                });
+                var paddle = new Paddle(canvas.width/2 - 25, 50);
                 
-                //create ball
-                var Ball = function(x, y) {
-                    this.x = x;
-                    this.y = y;
-                    this.xSpeed = 1;
-                    this.ySpeed = 1;
-                };
                 
-                Ball.prototype.draw = function() {
-                    var context = canvas.getContext('2d');
-                    context.beginPath();
-                    context.arc(this.x, this.y, 5, 0, 360);
-                    context.fill();
-                };
+                paddle.draw();
                 
-                Ball.prototype.checkPaddle = function() {
-                    if (this.y === paddle.y && this.x > paddle.x - paddle.width/2 && this.x < paddle.x + paddle.width/2) {
-                        this.ySpeed = this.ySpeed * -1;
-                    }  else if (this.y > 350) {
-                        context.font = "100px Ariel";
-                        context.fillText("Game Over!!!", canvas.width/2, canvas.height/2);
-                    }
-                };
                 
-                Ball.prototype.updatePos = function () {
-                    this.checkPaddle();
-                    if (this.y < 5) {
-                        this.ySpeed = this.ySpeed * -1;
-                    }
-                    if (this.x < 5) {
-                        this.xSpeed = this.xSpeed * -1;
-                    }
-                    if (this.x > canvas.width - 5) {
-                        this.xSpeed = this.xSpeed * -1;
-                    }
-                    this.x = this.x + this.xSpeed;
-                    this.y = this.y + this.ySpeed;
+                
+                //main program
+                function mainProgramUpdate(evt) {
+                    //clear the canvas
+                    context.clearRect(0, 350, canvas.width, canvas.height);
                     
-                };
+                    //paddle.draw(event);
+                    
+                    
+                }
+                //setInterval(mainProgramUpdate, 20);
                 
-                var ball = new Ball(canvas.width/2, 345);
-                ball.draw();
-                //create bricks
-                var Brick = function(x, y, color) {
-                    this.x = x;
-                    this.y = y;
-                    this.hit = false;
-                    this.color = color;
-                };
-                
-                
-           /* how to get mouse x and y ---
-           
-           function writeMessage(canvas, message) {
-        var context = canvas.getContext('2d');
-        context.clearRect(0, 0, canvas.width, canvas.height);
-        context.font = '18pt Calibri';
-        context.fillStyle = 'black';
-        context.fillText(message, 10, 25);
-      }
-      function getMousePos(canvas, evt) {
-        var rect = canvas.getBoundingClientRect();
-        return {
-          x: evt.clientX - rect.left,
-          y: evt.clientY - rect.top
-        };
-      }
-      var canvas = document.getElementById('myCanvas');
-      var context = canvas.getContext('2d');
-
-      canvas.addEventListener('mousemove', function(evt) {
-        var mousePos = getMousePos(canvas, evt);
-        var message = 'Mouse position: ' + mousePos.x + ',' + mousePos.y;
-        writeMessage(canvas, message);
-      }, false);
-
----
-*/
        </script>
     </body>
     
