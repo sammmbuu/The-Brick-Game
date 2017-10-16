@@ -34,17 +34,16 @@
     <body>
        <canvas id="myCanvas" width="800" height="400" onload="draw();"></canvas>
        <script type="text/javascript" src="main.js"></script>
-       <script>
+       <script type="text/javascript">
            
             var canvas = document.getElementById('myCanvas');
             var context = canvas.getContext('2d');
-            
+            var mouseX;
             
             
             //draw paddle
             
                 function getMousePos(event) {
-                    console.log(event);
                     var rect = canvas.getBoundingClientRect();
                     return {
                       x: event.clientX - rect.left,
@@ -53,26 +52,42 @@
                 }
                 
                 var Paddle = function(x, width) {
-                    this.x = x;
+                    this.x = x,
                     this.width = width;
                 };
                 
-                Paddle.prototype.draw = function(event) {
-                    console.log(event);
-                    canvas.onmousemove = function(event){
+                Paddle.prototype.updatePos = function() {
                     
+                    //using mouse
+                    canvas.addEventListener("mousemove", function(event){
                         var mouseX = getMousePos(event);
                         this.x = mouseX.x;
+                        console.log(this.x);
+                    });
                     
-                        if (this.x < 25){
-                            this.x = 25;
-                        } else if(this.x > canvas.width - 25) {
-                            this.x = canvas.width - 25;
+                    /*
+                    //using arrows
+                    document.addEventListener("keydown", function(event){
+                        if(event.keyCode == 37) {
+                            this.x -= 5;
+                        } else if (event.keyCode == 39) {
+                            this.x += 5;
                         }
-                        
-                        context.fillStyle = "green";
-                        context.fillRect(this.x - 25, 350, 50, 10);
-                    };
+                    });
+                    */
+                    
+                    //constrain the paddle
+                    if (this.x < 25){
+                        this.x = 25;
+                    } else if(this.x > canvas.width - 25) {
+                        this.x = canvas.width - 25;
+                    }
+                    
+                };
+                
+                Paddle.prototype.makeItSo = function() {
+                    context.fillStyle = "green";
+                    context.fillRect(this.x - 25, 350, 50, 10);
                     
                 };
                 
@@ -84,15 +99,17 @@
                 
                 
                 //main program
-                function mainProgramUpdate(evt) {
+                function mainProgramUpdate(event) {
                     //clear the canvas
                     context.clearRect(0, 350, canvas.width, canvas.height);
                     
-                    paddle.draw(event);
+                    paddle.updatePos();
+                    //console.log(paddle.x);
+                    paddle.makeItSo();
                     
                     
                 }
-                setInterval(mainProgramUpdate, 50);
+                setInterval(mainProgramUpdate, 41);
                 
        </script>
     </body>
