@@ -59,24 +59,27 @@
                 
                 Paddle.prototype.draw = function(event) {
                     console.log(event);
-                    var mouseX = getMousePos(event);
-                    this.x = mouseX.x;
-                
-                    if (this.x < 25){
-                        this.x = 25;
-                    } else if(this.x > canvas.width - 25) {
-                        this.x = canvas.width - 25;
-                    }
+                    canvas.onmousemove = function(event){
                     
-                    context.fillStyle = "green";
-                    context.fillRect(this.x - 25, 350, this.width, 10);
+                        var mouseX = getMousePos(event);
+                        this.x = mouseX.x;
+                    
+                        if (this.x < 25){
+                            this.x = 25;
+                        } else if(this.x > canvas.width - 25) {
+                            this.x = canvas.width - 25;
+                        }
+                        
+                        context.fillStyle = "green";
+                        context.fillRect(this.x - 25, 350, 50, 10);
+                    };
                     
                 };
                 
                 var paddle = new Paddle(canvas.width/2 - 25, 50);
                 
                 
-                paddle.draw();
+                //paddle.draw(event);
                 
                 
                 
@@ -85,11 +88,11 @@
                     //clear the canvas
                     context.clearRect(0, 350, canvas.width, canvas.height);
                     
-                    //paddle.draw(event);
+                    paddle.draw(event);
                     
                     
                 }
-                //setInterval(mainProgramUpdate, 20);
+                setInterval(mainProgramUpdate, 50);
                 
        </script>
     </body>
