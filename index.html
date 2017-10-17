@@ -39,7 +39,7 @@
             var canvas = document.getElementById('myCanvas');
             var context = canvas.getContext('2d');
             var mouseX;
-            
+            var rect = canvas.getBoundingClientRect();
             
             //draw paddle
             
@@ -78,26 +78,37 @@
                 var Balls = function(){
                     this.x = canvas.width/2;
                     this.y = 344;
-                    this.speedX = 5;
-                    this.speedY = -5;
+                    this.speedX = 2;
+                    this.speedY = -2;
                     this.radius = 6;
                 };
                 
                 Balls.prototype.checkWallCollision = function(){
-                    if (this.x - this.radius <= 0){
+                    if (this.x - this.radius <= (0)){
                         this.speedX = this.speedX * -1;
-                    }   else if (this.x + this.radius >= canvas.width) {
+                    }   else if (this.x + this.radius >= (canvas.width)) {
                         this.speedX = this.speedX * -1;
-                    }   else if (this.y - this.radius <= 0) {
+                    }   else if (this.y - this.radius <= (0)) {
                         this.speedY = this.speedY * -1;
                     }   else if (this.y + this.radius > canvas.height) {
+                        var context = canvas.getContext('2d');
+                        context.font = "50px Arial";
+                        context.fillStyle = "black";
+                        context.fillText("You Lose!! Try Again!!", 150, canvas.height/2)
+                        //set timeout
+                        
+                    }
+                };
+                
+                Balls.prototype.checkPaddleCollision = function(){
+                    if (this.y + this.radius === 350 && paddle.x - paddle.width/2 < this.x && paddle.x + paddle.width/2 > this.x){
                         this.speedY = this.speedY * -1;
                     }
                 };
                 
                 Balls.prototype.moveBall = function (){
                     this.x += this.speedX;
-                    this.y += this.speedX;
+                    this.y += this.speedY;
                 };
                 
                 Balls.prototype.create = function(){
@@ -106,6 +117,7 @@
                     context.arc(this.x, this.y, this.radius, 0, 360, false);
                     context.fillStyle = "blue";
                     context.fill();
+                    
                 };
                 
                 var ball = new Balls();
@@ -113,7 +125,7 @@
                 //main program
                 function mainProgramUpdate(event) {
                     //clear the canvas
-                    context.clearRect(0, 350, canvas.width, canvas.height);
+                    context.clearRect(0, 0, canvas.width, canvas.height);
                     
                     //move mouse
                     canvas.addEventListener("mousemove", function(event){
@@ -125,14 +137,16 @@
                     paddle.makeItSo();
                     
                     //update and move ball
-                    ball.checkWallCollision();
-                    ball.moveBall();
                     ball.create();
+                    ball.checkWallCollision();
+                    ball.checkPaddleCollision();
+                    ball.moveBall();
+                    
                     
                     
                 }
                 
-                setInterval(mainProgramUpdate, 41);
+                setInterval(mainProgramUpdate, 10);
                 
        </script>
     </body>
