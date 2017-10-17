@@ -56,27 +56,7 @@
                     this.width = width;
                 };
                 
-                Paddle.prototype.updatePos = function() {
-                    
-                    //using mouse
-                    canvas.addEventListener("mousemove", function(event){
-                        var mouseX = getMousePos(event);
-                        this.x = mouseX.x;
-                        console.log(this.x);
-                    });
-                    
-                    /*
-                    //using arrows
-                    document.addEventListener("keydown", function(event){
-                        if(event.keyCode == 37) {
-                            this.x -= 5;
-                        } else if (event.keyCode == 39) {
-                            this.x += 5;
-                        }
-                    });
-                    */
-                    
-                    //constrain the paddle
+                Paddle.prototype.constrainPaddle = function() {
                     if (this.x < 25){
                         this.x = 25;
                     } else if(this.x > canvas.width - 25) {
@@ -103,7 +83,12 @@
                     //clear the canvas
                     context.clearRect(0, 350, canvas.width, canvas.height);
                     
-                    paddle.updatePos();
+                    //move mouse
+                    canvas.addEventListener("mousemove", function(event){
+                        var mouseX = getMousePos(event);
+                        paddle.x = mouseX.x;
+                    });
+                    paddle.constrainPaddle(); 
                     //console.log(paddle.x);
                     paddle.makeItSo();
                     
