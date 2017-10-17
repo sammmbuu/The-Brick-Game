@@ -198,6 +198,10 @@
                     context.fillText("You Win!! Awesome!!!!", 150, canvas.height/2)
                 }
             };
+            
+            function stop (){
+                clearInterval(start);
+            };
                 
             //main program
             function mainProgramUpdate(event) {
@@ -209,17 +213,21 @@
                     var mouseX = getMousePos(event);
                     paddle.x = mouseX.x;
                 });
+                
                 paddle.constrainPaddle(); 
-                //console.log(paddle.x);
+                
                 paddle.makeItSo();
                 
                 for (var i = 0; i < bricks.length; i++){
                     bricks[i].construct();
                 }
-                //update and move ball
+                
                 ball.create();
+                
                 ball.checkWallCollision();
+                
                 ball.checkPaddleCollision();
+                
                 for (var i = 0; i < bricks.length; i++){
                     bricks[i].checkBrickHit();
                 }
@@ -227,13 +235,14 @@
                     bricks[i].destroy();
                 }
                 checkForWin();
+                
                 ball.moveBall();
                 
                 
                 
             }
             
-            setInterval(mainProgramUpdate, 10);
+            var start = setInterval(mainProgramUpdate, 10);
                 
        </script>
     </body>
