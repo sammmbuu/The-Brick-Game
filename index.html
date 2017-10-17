@@ -93,8 +93,8 @@
                         var context = canvas.getContext('2d');
                         context.font = "50px Arial";
                         context.fillStyle = "black";
-                        context.fillText("You Lose!! Try Again!!", 150, canvas.height/2)
-                        //set timeout
+                        context.fillText("You Lose!! Try Again!!", 150, canvas.height/2);
+                        stop();
                         
                     }
                 };
@@ -195,13 +195,14 @@
                 if (bricks.length === 0){
                     context.font = "50px Arial";
                     context.fillStyle = "black";
-                    context.fillText("You Win!! Awesome!!!!", 150, canvas.height/2)
+                    context.fillText("You Win!! Awesome!!!!", 150, canvas.height/2);
+                    stop();
                 }
-            };
-            
+            }
+            //stop the animating
             function stop (){
                 clearInterval(start);
-            };
+            }
                 
             //main program
             function mainProgramUpdate(event) {
