@@ -121,32 +121,60 @@
                 };
                 
                 var ball = new Balls();
+            
+            //bricks
+            
+                var Brick = function(x, y, color){
+                    this.x = x;
+                    this.y = y;
+                    this.color = color;
+                    this.isHit = false;
+                };
                 
-                //main program
-                function mainProgramUpdate(event) {
-                    //clear the canvas
-                    context.clearRect(0, 0, canvas.width, canvas.height);
-                    
-                    //move mouse
-                    canvas.addEventListener("mousemove", function(event){
-                        var mouseX = getMousePos(event);
-                        paddle.x = mouseX.x;
-                    });
-                    paddle.constrainPaddle(); 
-                    //console.log(paddle.x);
-                    paddle.makeItSo();
-                    
-                    //update and move ball
-                    ball.create();
-                    ball.checkWallCollision();
-                    ball.checkPaddleCollision();
-                    ball.moveBall();
-                    
-                    
-                    
+                Brick.prototype.construct = function(){
+                    var context = canvas.getContext('2d');
+                    context.fillStyle = this.color;
+                    context.fillRect(this.x, this.y, 50, 15);
+                };
+                
+                var bricks = [];
+                
+                for (var i = 1; i < 4; i++){
+                    for (var j = 1; j < 10; j++) {
+                        var brick = new Brick(j * 75, i * 30, "red");
+                        bricks.push(brick);
+                    }
                 }
                 
-                setInterval(mainProgramUpdate, 10);
+                
+            //main program
+            function mainProgramUpdate(event) {
+                //clear the canvas
+                context.clearRect(0, 0, canvas.width, canvas.height);
+                
+                //move mouse
+                canvas.addEventListener("mousemove", function(event){
+                    var mouseX = getMousePos(event);
+                    paddle.x = mouseX.x;
+                });
+                paddle.constrainPaddle(); 
+                //console.log(paddle.x);
+                paddle.makeItSo();
+                
+                for (var i = 0; i < bricks.length; i++){
+                    bricks[i].construct();
+                }
+                //update and move ball
+                ball.create();
+                ball.checkWallCollision();
+                ball.checkPaddleCollision();
+                ball.moveBall();
+                
+                
+                
+            }
+            
+            setInterval(mainProgramUpdate, 10);
                 
        </script>
     </body>
