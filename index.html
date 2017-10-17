@@ -38,8 +38,7 @@
            
             var canvas = document.getElementById('myCanvas');
             var context = canvas.getContext('2d');
-            var mouseX;
-            var rect = canvas.getBoundingClientRect();
+            
             
             //draw paddle
             
@@ -134,7 +133,53 @@
                 Brick.prototype.construct = function(){
                     var context = canvas.getContext('2d');
                     context.fillStyle = this.color;
-                    context.fillRect(this.x, this.y, 50, 15);
+                    context.fillRect(this.x, this.y, 50, 16);
+                };
+                
+                Brick.prototype.checkBrickHit = function(){
+                    //bottom hit
+                    if(ball.x - ball.radius >= this.x && 
+                       ball.x + ball.radius <= this.x + 50 &&
+                       ball.y - ball.radius <= this.y + 16 &&
+                       ball.y + ball.radius >= this.y) {
+                           this.isHit = true;
+                           ball.speedY = ball.speedY * -1;
+                    }   
+                    //top hit
+                    else if (ball.x - ball.radius >= this.x && 
+                       ball.x  + ball.radius <= this.x + 50 &&
+                       ball.y - ball.radius <= this.y + 16 &&
+                       ball.y + ball.radius >= this.y) {
+                           this.isHit = true;
+                           ball.speedY = ball.speedY * -1;
+                    }   
+                    //right hit
+                    else if (ball.y - ball.radius >= this.y &&
+                        ball.y + ball.radius <= this.y + 16 &&
+                        ball.x - ball.radius <= this.x + 50 &&
+                        ball.x + ball.radius >= this.x){
+                            this.isHit = true;
+                            ball.speedX = ball.speedX * -1;
+                        }
+                    //left hit
+                    else if (ball.y - ball.radius >= this.y &&
+                        ball.y + ball.radius <= this.y + 16 &&
+                        ball.x - ball.radius <= this.x + 50 &&
+                        ball.x + ball.radius >= this.x){
+                            this.isHit = true;
+                            ball.speedX = ball.speedX * -1;
+                        }
+                };
+                
+                Brick.prototype.destroy = function(){
+                    if (this.isHit){
+                        var thisIndex = bricks.indexOf(this);
+                        var temp = bricks[bricks.length-1];
+                        bricks[bricks.length-1] = bricks[thisIndex];
+                        bricks[thisIndex] = temp;
+                        bricks.pop();
+                        
+                    } 
                 };
                 
                 var bricks = [];
@@ -145,7 +190,14 @@
                         bricks.push(brick);
                     }
                 }
-                
+            //check for win!
+            function checkForWin(){
+                if (bricks.length === 0){
+                    context.font = "50px Arial";
+                    context.fillStyle = "black";
+                    context.fillText("You Win!! Awesome!!!!", 150, canvas.height/2)
+                }
+            };
                 
             //main program
             function mainProgramUpdate(event) {
@@ -168,6 +220,13 @@
                 ball.create();
                 ball.checkWallCollision();
                 ball.checkPaddleCollision();
+                for (var i = 0; i < bricks.length; i++){
+                    bricks[i].checkBrickHit();
+                }
+                for (var i = 0; i < bricks.length; i++){
+                    bricks[i].destroy();
+                }
+                checkForWin();
                 ball.moveBall();
                 
                 
