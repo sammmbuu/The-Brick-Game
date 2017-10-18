@@ -47,7 +47,8 @@
             var canvas = document.getElementById('myCanvas');
             var context = canvas.getContext('2d');
             var start = document.getElementById("start");
-            
+            var ballCount = 0;
+            var begin;
             
             //paddle functions
                 //get mouse location to use for paddle
@@ -127,6 +128,16 @@
                 
                 //update ball location
                 Balls.prototype.moveBall = function (){
+                    //constrain speed
+                    if (this.speedX > 2){
+                        this.speedX = 2;
+                    }   else if (this.speedX < -2){
+                        this.speedX = -2;
+                    }   else if (this.speedY > 2){
+                        this.speedY = 2;
+                    }   else if (this.speedY < -2){
+                        this.speedY = -2;
+                    }
                     this.x += this.speedX;
                     this.y += this.speedY;
                 };
@@ -234,23 +245,20 @@
                 clearInterval(begin);
             }
             //update paddle location
+            
             //move mouse
                 canvas.addEventListener("mousemove", function(event){
+                    //had to redeclare mouseX to avoid adding trash to object
                     var mouseX = 0;
                     mouseX = getMousePos(event);
                     paddle.x = mouseX.x;
                 });
+                
             //main program
             function mainProgramUpdate(event) {
                 //clear the canvas
                 context.clearRect(0, 0, canvas.width, canvas.height);
-                /*
-                //move mouse
-                canvas.addEventListener("mousemove", function(event){
-                    var mouseX = getMousePos(event);
-                    paddle.x = mouseX.x;
-                });
-                */
+                
                 paddle.constrainPaddle(); 
                 
                 paddle.makeItSo();
@@ -279,9 +287,30 @@
                 
             }
             
+            //make function to reset game if start is clicked
             
-            var begin = setInterval(mainProgramUpdate, 10);
-            
+            function reset(){
+                //remake bricks
+                bricks = [];
+                for (var i = 1; i < 4; i++){
+                    for (var j = 1; j < 10; j++) {
+                        var brick = new Brick(j * 75, i * 30, "red");
+                        bricks.push(brick);
+                    }
+                }
+                
+                //reset ball
+                ballCount++;
+                ball.x = canvas.width/2;
+                ball.y = 344;
+                ball.speedX = 2;
+                ball.speedY = -2;
+            }
+            start.addEventListener("click", function(){
+                reset();
+                begin = setInterval(mainProgramUpdate, 10);
+                return begin;
+            });
             
                 
        </script>
