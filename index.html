@@ -26,6 +26,13 @@
            #myCanvas:hover {
                cursor: none;
            }
+           /*start button styling*/
+           #start {
+               position: absolute;
+               left: 50%;
+               top: 10%;
+               
+           }
        </style>
        <title>The Brick Game</title>
        
@@ -33,15 +40,17 @@
     
     <body>
        <canvas id="myCanvas" width="800" height="400" onload="draw();"></canvas>
+       <button type="button" id="start">Start</button>
        <script type="text/javascript" src="main.js"></script>
        <script type="text/javascript">
-           
+            //global variables
             var canvas = document.getElementById('myCanvas');
             var context = canvas.getContext('2d');
+            var start = document.getElementById("start");
             
             
-            //draw paddle
-            
+            //paddle functions
+                //get mouse location to use for paddle
                 function getMousePos(event) {
                     var rect = canvas.getBoundingClientRect();
                     return {
@@ -50,11 +59,13 @@
                     };
                 }
                 
+                //paddle object
                 var Paddle = function(x, width) {
                     this.x = x,
                     this.width = width;
                 };
                 
+                //make sure paddle doesn't extend beyond the canvas
                 Paddle.prototype.constrainPaddle = function() {
                     if (this.x < 25){
                         this.x = 25;
@@ -64,16 +75,18 @@
                     
                 };
                 
+                //actually draw the paddle
                 Paddle.prototype.makeItSo = function() {
                     context.fillStyle = "green";
                     context.fillRect(this.x - 25, 350, 50, 10);
                     
                 };
                 
+                //actual paddle
                 var paddle = new Paddle(canvas.width/2 - 25, 50);
                 
             //ball object
-                
+                //ball object
                 var Balls = function(){
                     this.x = canvas.width/2;
                     this.y = 344;
@@ -82,6 +95,12 @@
                     this.radius = 6;
                 };
                 
+                //constrain ball bounces within the canvas, i.e. if ball 
+                //hits wall then speed becomes opposite of what it was
+                //
+                //
+                //if ball goes off the bottom of the page end and
+                //display lose screen
                 Balls.prototype.checkWallCollision = function(){
                     if (this.x - this.radius <= (0)){
                         this.speedX = this.speedX * -1;
@@ -99,17 +118,20 @@
                     }
                 };
                 
+                //create test to see if paddle colides with ball
                 Balls.prototype.checkPaddleCollision = function(){
                     if (this.y + this.radius === 350 && paddle.x - paddle.width/2 < this.x && paddle.x + paddle.width/2 > this.x){
                         this.speedY = this.speedY * -1;
                     }
                 };
                 
+                //update ball location
                 Balls.prototype.moveBall = function (){
                     this.x += this.speedX;
                     this.y += this.speedY;
                 };
                 
+                //draw ball
                 Balls.prototype.create = function(){
                     
                     context.beginPath();
@@ -118,11 +140,11 @@
                     context.fill();
                     
                 };
-                
+                //actual ball
                 var ball = new Balls();
             
             //bricks
-            
+                //brick object
                 var Brick = function(x, y, color){
                     this.x = x;
                     this.y = y;
@@ -130,12 +152,16 @@
                     this.isHit = false;
                 };
                 
+                //draw the bricks function
                 Brick.prototype.construct = function(){
                     var context = canvas.getContext('2d');
                     context.fillStyle = this.color;
                     context.fillRect(this.x, this.y, 50, 16);
                 };
                 
+                //check to see if ball collides with brick
+                //
+                //if ball does hit brick then change its isHit status to true
                 Brick.prototype.checkBrickHit = function(){
                     //bottom hit
                     if(ball.x - ball.radius >= this.x && 
@@ -171,6 +197,7 @@
                         }
                 };
                 
+                //if brick isHit status is true, then remove it from game
                 Brick.prototype.destroy = function(){
                     if (this.isHit){
                         var thisIndex = bricks.indexOf(this);
@@ -182,6 +209,7 @@
                     } 
                 };
                 
+                //create array of bricks using a nested for loop
                 var bricks = [];
                 
                 for (var i = 1; i < 4; i++){
@@ -190,7 +218,8 @@
                         bricks.push(brick);
                     }
                 }
-            //check for win!
+                
+            //check for win! Game ends if the array of bricks is reduced to 0
             function checkForWin(){
                 if (bricks.length === 0){
                     context.font = "50px Arial";
@@ -199,22 +228,29 @@
                     stop();
                 }
             }
+            
             //stop the animating
             function stop (){
-                clearInterval(start);
+                clearInterval(begin);
             }
-                
+            //update paddle location
+            //move mouse
+                canvas.addEventListener("mousemove", function(event){
+                    var mouseX = 0;
+                    mouseX = getMousePos(event);
+                    paddle.x = mouseX.x;
+                });
             //main program
             function mainProgramUpdate(event) {
                 //clear the canvas
                 context.clearRect(0, 0, canvas.width, canvas.height);
-                
+                /*
                 //move mouse
                 canvas.addEventListener("mousemove", function(event){
                     var mouseX = getMousePos(event);
                     paddle.x = mouseX.x;
                 });
-                
+                */
                 paddle.constrainPaddle(); 
                 
                 paddle.makeItSo();
@@ -243,7 +279,10 @@
                 
             }
             
-            var start = setInterval(mainProgramUpdate, 10);
+            
+            var begin = setInterval(mainProgramUpdate, 10);
+            
+            
                 
        </script>
     </body>
